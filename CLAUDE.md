@@ -37,8 +37,7 @@ real dice, pass one phone around, and type in their scores. No backend.
 | Yatzy           | Five of a kind = 50                        |
 
 Any category can be scratched (0). Max total is 374. Scores are typed in and checked against
-each category's valid values. Generate those by going through every possible 5-dice roll, not
-by hard-coding them.
+each category's valid values, which are listed as data in the rule set.
 
 ## Structure
 
