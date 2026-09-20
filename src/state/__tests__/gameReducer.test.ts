@@ -23,8 +23,8 @@ describe("NEW_GAME", () => {
   });
 
   it("stores the chosen rule set", () => {
-    const state = gameReducer(createInitialState(), { type: "NEW_GAME", ruleSetId: "american", playerNames: ["Anna"] });
-    expect(state.ruleSetId).toBe("american");
+    const state = gameReducer(createInitialState(), { type: "NEW_GAME", ruleSetId: "best", playerNames: ["Anna"] });
+    expect(state.ruleSetId).toBe("best");
   });
 
   it("leaves state unchanged when no names are given", () => {
@@ -65,11 +65,11 @@ describe("SET_SCORE", () => {
   });
 
   it("validates against the game's rule set", () => {
-    const state = gameReducer(createInitialState(), { type: "NEW_GAME", ruleSetId: "american", playerNames: ["Anna"] });
+    const state = gameReducer(createInitialState(), { type: "NEW_GAME", ruleSetId: "best", playerNames: ["Anna"] });
     const set = (value: number) =>
-      gameReducer(state, { type: "SET_SCORE", playerId: "player-1", categoryId: ECategory.FullHouse, value });
-    expect(set(25).players[0].sheet).toEqual({ [ECategory.FullHouse]: 25 });
-    expect(set(20)).toBe(state);
+      gameReducer(state, { type: "SET_SCORE", playerId: "player-1", categoryId: ECategory.SmallStraight, value });
+    expect(set(30).players[0].sheet).toEqual({ [ECategory.SmallStraight]: 30 });
+    expect(set(15)).toBe(state);
   });
 
   it("ignores unknown players", () => {

@@ -1,10 +1,10 @@
-import { AMERICAN_YATZY } from "./american";
+import { BEST_YATZY } from "./best";
 import { SCANDINAVIAN_YATZY } from "./scandinavian";
 import type { ECategory, IRuleSet } from "./types";
 
 export const RULE_SETS = {
   scandinavian: SCANDINAVIAN_YATZY,
-  american: AMERICAN_YATZY,
+  best: BEST_YATZY,
 } as const;
 
 export type TRuleSetId = keyof typeof RULE_SETS;

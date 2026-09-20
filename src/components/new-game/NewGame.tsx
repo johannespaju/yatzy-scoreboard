@@ -66,9 +66,6 @@ export function NewGame({ onStart }: INewGameProps) {
             className="rounded-full border-2 border-rule bg-tile px-5 py-3 text-lg outline-none transition-colors duration-200 placeholder:text-ink-muted/60 focus:border-ink"
           />
         ))}
-      </div>
-
-      <div className="flex flex-col gap-3">
         {names.length < MAX_PLAYERS && (
           <button
             type="button"
@@ -78,6 +75,9 @@ export function NewGame({ onStart }: INewGameProps) {
             Add player
           </button>
         )}
+      </div>
+
+      <div className="mt-6 flex flex-col gap-3">
         <button
           type="submit"
           disabled={!canStart}

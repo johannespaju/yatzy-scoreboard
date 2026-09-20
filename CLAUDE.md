@@ -39,28 +39,21 @@ real dice, pass one phone around, and type in their scores. No backend.
 Any category can be scratched (0). Max total is 374. Scores are typed in and checked against
 each category's valid values, which are listed as data in the rule set.
 
-## Rules (American Yatzy, 5 dice)
+## Rules (Best Yatzy, 5 dice)
 
-Official US Yahtzee scoring, selectable on the New Game screen. No One Pair / Two Pairs.
-The extra-Yahtzee bonus (100 per additional Yahtzee) and joker rules are not implemented.
+Scandinavian Yatzy with the American straights, selectable on the New Game screen.
+Everything else (bonus, pairs, Full House as sum, etc.) is identical to Scandinavian.
 
 | Category        | Score                                      |
 |-----------------|--------------------------------------------|
-| Ones–Sixes      | Sum of dice showing that face              |
-| Bonus           | 35 if upper sum ≥ 63                       |
-| Three of a Kind | Sum of all five dice (5–30)                |
-| Four of a Kind  | Sum of all five dice (5–30)                |
-| Full House      | 25                                         |
 | Small Straight  | Four in a row = 30                         |
 | Large Straight  | Five in a row = 40                         |
-| Chance          | Sum of all dice                            |
-| Yatzy           | Five of a kind = 50                        |
 
-Max total is 375.
+Max total is 409.
 
 ## Structure
 
-- `src/rules/`: rule sets as plain TypeScript data (`scandinavian.ts`, `american.ts`).
+- `src/rules/`: rule sets as plain TypeScript data (`scandinavian.ts`, `best.ts`).
   `ruleSets.ts` is the registry (`RULE_SETS`, `DEFAULT_RULE_SET_ID`, `getRuleSet`, `isValidScore`).
   The UI never hard-codes categories; it reads them from the game's rule set.
 - `src/state/`: pure game reducer + `useGame` hook (localStorage).

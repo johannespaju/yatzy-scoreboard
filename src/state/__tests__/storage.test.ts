@@ -30,9 +30,9 @@ describe("parseGameState", () => {
     expect(parseGameState(JSON.stringify(game))).toEqual(game);
   });
 
-  it("round-trips an American Yatzy game", () => {
-    const american: IGameState = { ...game, ruleSetId: "american" };
-    expect(parseGameState(JSON.stringify(american))).toEqual(american);
+  it("round-trips a Best Yatzy game", () => {
+    const best: IGameState = { ...game, ruleSetId: "best" };
+    expect(parseGameState(JSON.stringify(best))).toEqual(best);
   });
 
   it("returns undefined for missing or broken JSON", () => {
