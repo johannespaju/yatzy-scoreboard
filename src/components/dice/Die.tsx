@@ -2,7 +2,8 @@ import type { TDieFace, TDieValue } from "@/rules/types";
 
 interface IDieProps {
   face: TDieFace;
-  size?: number;
+  /** Pixels, or any SVG length such as "80%". */
+  size?: number | string;
 }
 
 // Pip positions on a 3x3 grid inside a 16x16 viewBox, numbered

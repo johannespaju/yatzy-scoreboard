@@ -9,6 +9,7 @@ import { canLock, canRoll, canScoreDice, getCurrentPlayer, getPreviewScores, get
 import type { IDiceState, ISelectedCell } from "@/state/types";
 import { useGame } from "@/state/useGame";
 import { NewGame } from "@/components/new-game/NewGame";
+import type { ISpin } from "@/components/slot/Reel";
 import { SlotCabinet } from "@/components/slot/SlotCabinet";
 import { Scoreboard } from "./Scoreboard";
 import { ScoreInput } from "./ScoreInput";
@@ -27,6 +28,10 @@ export function Game() {
   const [lastSaved, setLastSaved] = useState<ISelectedCell | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [undo, setUndo] = useState<IUndo | null>(null);
+  // The roll whose reels are still turning. Scores stay hidden until they stop.
+  const [spin, setSpin] = useState<ISpin | null>(null);
+  const [spinCount, setSpinCount] = useState(0);
+  const spinning = spin !== null;
 
   useEffect(() => {
     if (!undo) return;
@@ -55,6 +60,7 @@ export function Game() {
     setConfirmEnd(false);
     setLastSaved(null);
     setUndo(null);
+    setSpin(null);
     dispatch({ type: "END_GAME" });
   }
 
@@ -72,9 +78,15 @@ export function Game() {
   }
 
   function roll() {
-    if (!canRoll(state)) return;
+    if (!state.dice || !canRoll(state) || spinning) return;
+    const from = state.dice.values;
     setUndo(null);
     dispatch({ type: "ROLL_DICE", values: randomDieValues() });
+    // With reduced motion the reels don't animate, so there is no animationend to wait for.
+    if (!prefersReducedMotion()) {
+      setSpinCount(spinCount + 1);
+      setSpin({ id: spinCount + 1, from });
+    }
   }
 
   return (
@@ -101,12 +113,14 @@ export function Game() {
       {state.dice && current && (
         <SlotCabinet
           dice={state.dice}
+          spin={spin}
           canRoll={canRoll(state)}
           canLock={canLock(state)}
           rollsLeft={getRollsLeft(state)}
           playerName={current.name}
           onRoll={roll}
           onToggleLock={(index) => dispatch({ type: "TOGGLE_LOCK", index })}
+          onSettled={() => setSpin(null)}
         />
       )}
 
@@ -129,8 +143,8 @@ export function Game() {
         lastSaved={lastSaved}
         onPopEnd={() => setLastSaved(null)}
         onSelectCell={selectCell}
-        previews={getPreviewScores(state)}
-        canSelect={state.dice ? (player, category) => canScoreDice(state, player.id, category.id) : undefined}
+        previews={spinning ? undefined : getPreviewScores(state)}
+        canSelect={state.dice ? (player, category) => !spinning && canScoreDice(state, player.id, category.id) : undefined}
       />
 
       {isGameOver(state) && (
@@ -144,6 +158,7 @@ export function Game() {
           onNewGame={() => {
             setLastSaved(null);
             setUndo(null);
+            setSpin(null);
             dispatch({ type: "END_GAME" });
           }}
         />
