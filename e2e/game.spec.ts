@@ -90,7 +90,7 @@ test.describe("game", () => {
     await expect(row("Total")).toContainText("332");
 
     await expect(page.getByRole("heading", { name: "Game over" })).toBeVisible();
-    await expect(page.getByRole("listitem")).toContainText("1. Anna");
+    await expect(page.getByRole("listitem")).toContainText(/1\.\s*Anna/);
 
     await page.getByRole("button", { name: "Play again" }).click();
     await expect(page.getByRole("heading", { name: "Game over" })).toBeHidden();

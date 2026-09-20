@@ -25,7 +25,7 @@ export function NewGame({ onStart }: INewGameProps) {
   const canStart = names.some((n) => n.trim().length > 0);
 
   return (
-    <form onSubmit={handleSubmit} className="flex min-h-dvh w-full max-w-sm mx-auto flex-col justify-center gap-6 px-5 py-10">
+    <form onSubmit={handleSubmit} className="flex min-h-dvh w-full max-w-sm mx-auto flex-col justify-center gap-6 px-5 py-10 motion-safe:animate-fade-in">
       <div>
         <h1 className="font-display text-5xl font-bold leading-none tracking-tight">Yatzy Scoreboard</h1>
       </div>
@@ -42,7 +42,7 @@ export function NewGame({ onStart }: INewGameProps) {
                 role="radio"
                 aria-checked={active}
                 onClick={() => setRuleSetId(id)}
-                className={`flex-1 rounded-full border-2 border-ink py-3 font-medium ${
+                className={`flex-1 rounded-full border-2 border-ink py-3 font-medium transition-colors duration-200 ${
                   active ? "bg-ink text-tile" : "active:bg-canvas-strong"
                 }`}
               >
@@ -63,7 +63,7 @@ export function NewGame({ onStart }: INewGameProps) {
             onChange={(e) => setName(i, e.target.value)}
             placeholder={`Player ${i + 1}`}
             aria-label={`Player ${i + 1} name`}
-            className="rounded-full border-2 border-rule bg-tile px-5 py-3 text-lg outline-none placeholder:text-ink-muted/60 focus:border-ink"
+            className="rounded-full border-2 border-rule bg-tile px-5 py-3 text-lg outline-none transition-colors duration-200 placeholder:text-ink-muted/60 focus:border-ink"
           />
         ))}
       </div>
@@ -81,7 +81,7 @@ export function NewGame({ onStart }: INewGameProps) {
         <button
           type="submit"
           disabled={!canStart}
-          className="rounded-full bg-ink py-3 text-lg font-bold text-tile disabled:opacity-30"
+          className="rounded-full bg-ink py-3 text-lg font-bold text-tile transition-opacity duration-200 disabled:opacity-30"
         >
           Start
         </button>

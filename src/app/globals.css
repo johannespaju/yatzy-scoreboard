@@ -21,8 +21,13 @@
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-franklin);
 
-  --animate-sheet-up: sheet-up 200ms ease-out;
-  --animate-fade-in: fade-in 150ms ease-out;
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --animate-sheet-up: sheet-up 220ms var(--ease-sheet) both;
+  --animate-sheet-down: sheet-down 220ms var(--ease-sheet) both;
+  --animate-fade-in: fade-in 220ms ease-out both;
+  --animate-fade-out: fade-out 220ms ease-out both;
+  --animate-rise-in: rise-in 300ms var(--ease-sheet) both;
   --animate-tile-pop: tile-pop 180ms ease-out;
 
   @keyframes sheet-up {
@@ -33,12 +38,38 @@
       transform: translateY(0);
     }
   }
+  @keyframes sheet-down {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
   @keyframes fade-in {
     from {
       opacity: 0;
     }
     to {
       opacity: 1;
+    }
+  }
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
   @keyframes tile-pop {
@@ -54,16 +85,9 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-sheet-up,
-  .animate-fade-in,
-  .animate-tile-pop {
-    animation: none;
-  }
-}
-
 body {
   background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
 }

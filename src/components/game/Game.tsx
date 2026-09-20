@@ -37,7 +37,7 @@ export function Game() {
   }
 
   return (
-    <main className="flex w-full max-w-lg mx-auto flex-col gap-5 px-4 py-5">
+    <main className="flex w-full max-w-lg mx-auto flex-col gap-5 px-4 py-5 motion-safe:animate-fade-in">
       <header className="flex items-start justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl font-bold leading-none tracking-tight">Yatzy Scoreboard</h1>
@@ -48,7 +48,7 @@ export function Game() {
             type="button"
             onClick={endGame}
             onBlur={() => setConfirmEnd(false)}
-            className={`shrink-0 rounded-full border-2 border-ink px-3 py-1 text-sm font-medium ${
+            className={`shrink-0 rounded-full border-2 border-ink px-3 py-1 text-sm font-medium transition-colors duration-200 ${
               confirmEnd ? "bg-ink text-tile" : ""
             }`}
           >

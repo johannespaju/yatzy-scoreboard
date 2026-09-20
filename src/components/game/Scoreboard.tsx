@@ -77,7 +77,7 @@ export function Scoreboard({ state, lastSaved, onPopEnd, onSelectCell }: IScoreb
             {state.players.map((player) => (
               <th key={player.id} scope="col" className={`${SCORE_CELL} px-0.5 pb-1.5 text-sm font-bold`}>
                 <span
-                  className={`mx-auto block max-w-20 truncate rounded-full px-2 py-1 ${
+                  className={`mx-auto block max-w-20 truncate rounded-full px-2 py-1 transition-colors duration-200 ${
                     player.id === current?.id ? "bg-ink text-tile" : ""
                   }`}
                 >
@@ -117,10 +117,10 @@ function ScoreCell({ player, category, highlighted, justSaved, onClick, onPopEnd
       onClick={onClick}
       onAnimationEnd={onPopEnd}
       aria-label={`${player.name}, ${category.label}`}
-      className={`h-11 w-full rounded-lg font-medium active:bg-canvas-strong ${
+      className={`h-11 w-full select-none rounded-lg font-medium transition-[background-color,transform] duration-150 active:scale-95 active:bg-canvas-strong ${
         highlighted ? "bg-canvas-strong" : "bg-tile"
       } ${isEmpty ? "text-ink-muted" : score === 0 ? "text-ink-muted line-through" : ""} ${
-        justSaved ? "animate-tile-pop" : ""
+        justSaved ? "motion-safe:animate-tile-pop" : ""
       }`}
     >
       {isEmpty ? "–" : score}
