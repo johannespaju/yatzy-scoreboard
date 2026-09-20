@@ -1,4 +1,5 @@
-import type { TRuleSetId, TScoreSheet } from "@/rules";
+import type { TRuleSetId } from "@/rules/ruleSets";
+import type { TScoreSheet } from "@/rules/types";
 
 export interface IPlayer {
   id: string;

@@ -42,9 +42,13 @@ each category's valid values, which are listed as data in the rule set.
 ## Structure
 
 - `src/rules/`: rule sets as plain TypeScript data (categories, valid values, totals).
+  `ruleSets.ts` is the registry (`RULE_SETS`, `getRuleSet`, `isValidScore`).
   The UI never hard-codes categories, so US Yahtzee can be added later.
 - `src/state/`: pure game reducer + `useGame` hook (localStorage).
-- `src/components/`: UI. `Game.tsx` is the `'use client'` entry point; `app/page.tsx` just renders it.
+- `src/components/<feature>/`: UI grouped by feature (`game/`, `new-game/`, ...).
+  `game/Game.tsx` is the `'use client'` entry point; `app/page.tsx` just renders it.
+- Unit tests live in a `__tests__/` folder next to the code they test (`src/state/__tests__/`).
+- No barrel `index.ts` files. Import from the concrete file: `@/rules/types`, `@/state/useGame`.
 - Store only entered scores. Totals, bonus, current player and game over are calculated from them.
 - Read localStorage only after mount (in `useEffect`) to avoid hydration errors.
 

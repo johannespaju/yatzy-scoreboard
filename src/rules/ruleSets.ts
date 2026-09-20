@@ -1,10 +1,6 @@
 import { SCANDINAVIAN_YATZY } from "./scandinavian";
 import type { ECategory, IRuleSet } from "./types";
 
-export * from "./types";
-export * from "./totals";
-export { SCANDINAVIAN_YATZY };
-
 // Possibility to add NA yahtzee rules later
 export const RULE_SETS = {
   scandinavian: SCANDINAVIAN_YATZY,

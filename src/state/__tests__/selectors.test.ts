@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { ECategory, SCANDINAVIAN_YATZY, type TScoreSheet } from "@/rules";
-import { getCurrentPlayer, getPlayerTotals, getStandings, isGameOver } from "./selectors";
-import type { IGameState } from "./types";
+import { SCANDINAVIAN_YATZY } from "@/rules/scandinavian";
+import { ECategory, type TScoreSheet } from "@/rules/types";
+import { getCurrentPlayer, getPlayerTotals, getStandings, isGameOver } from "../selectors";
+import type { IGameState } from "../types";
 
 function game(...sheets: TScoreSheet[]): IGameState {
   return {

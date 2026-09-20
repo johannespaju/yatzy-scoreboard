@@ -1,4 +1,6 @@
-import { calculateTotals, getRuleSet, type IRuleSet, type ITotals, type TScoreSheet } from "@/rules";
+import { getRuleSet } from "@/rules/ruleSets";
+import { calculateTotals, type ITotals } from "@/rules/totals";
+import type { IRuleSet, TScoreSheet } from "@/rules/types";
 import type { IGameState, IPlayer } from "./types";
 
 export function getFilledCount(sheet: TScoreSheet, ruleSet: IRuleSet): number {

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { calculateTotals, ECategory, getMaxTotal, SCANDINAVIAN_YATZY } from "./index";
+import { SCANDINAVIAN_YATZY } from "../scandinavian";
+import { calculateTotals, getMaxTotal } from "../totals";
+import { ECategory } from "../types";
 
 describe("calculateTotals", () => {
   it("sums an empty sheet to zero", () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { ECategory } from "@/rules";
-import { createInitialState, gameReducer } from "./gameReducer";
-import type { IGameState } from "./types";
+import { ECategory } from "@/rules/types";
+import { createInitialState, gameReducer } from "../gameReducer";
+import type { IGameState } from "../types";
 
 function newGame(...playerNames: string[]): IGameState {
   return gameReducer(createInitialState(), { type: "NEW_GAME", ruleSetId: "scandinavian", playerNames });
@@ -104,5 +104,12 @@ describe("RESET", () => {
     state = gameReducer(state, { type: "RESET" });
     expect(state.players.map((p) => p.name)).toEqual(["Anna", "Bo"]);
     expect(state.players.every((p) => Object.keys(p.sheet).length === 0)).toBe(true);
+  });
+});
+
+describe("END_GAME", () => {
+  it("removes all players but keeps the rule set", () => {
+    const state = gameReducer(newGame("Anna", "Bo"), { type: "END_GAME" });
+    expect(state).toEqual({ ruleSetId: "scandinavian", players: [] });
   });
 });

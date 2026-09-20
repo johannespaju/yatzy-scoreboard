@@ -1,11 +1,13 @@
-import { type ECategory, getRuleSet, isValidScore, type TRuleSetId } from "@/rules";
+import { getRuleSet, isValidScore, type TRuleSetId } from "@/rules/ruleSets";
+import type { ECategory } from "@/rules/types";
 import type { IGameState, IPlayer } from "./types";
 
 export type TGameAction =
   | { type: "NEW_GAME"; ruleSetId: TRuleSetId; playerNames: string[] }
   | { type: "SET_SCORE"; playerId: string; categoryId: ECategory; value: number }
   | { type: "CLEAR_SCORE"; playerId: string; categoryId: ECategory }
-  | { type: "RESET" };
+  | { type: "RESET" }
+  | { type: "END_GAME" };
 
 export function createInitialState(): IGameState {
   return { ruleSetId: "scandinavian", players: [] };
@@ -47,5 +49,9 @@ export function gameReducer(state: IGameState, action: TGameAction): IGameState 
 
     case "RESET":
       return { ...state, players: state.players.map((p) => ({ ...p, sheet: {} })) };
+
+    // Removes the players so the UI goes back to the new-game screen.
+    case "END_GAME":
+      return { ...state, players: [] };
   }
 }
