@@ -3,8 +3,6 @@ import type { IGameState } from "./types";
 
 export const STORAGE_KEY = "yatzy-scoreboard.game";
 
-// localStorage is untrusted input: it may hold data from an older version of the
-// app or have been edited by hand. Check the shape before using it.
 export function parseGameState(json: string | null): IGameState | undefined {
   if (!json) return undefined;
   try {
@@ -45,7 +43,5 @@ export function loadGameState(storage: Storage): IGameState | undefined {
 export function saveGameState(storage: Storage, state: IGameState): void {
   try {
     storage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    // Quota exceeded or storage disabled (private mode): the game still works, it just won't survive a reload.
-  }
+  } catch {}
 }

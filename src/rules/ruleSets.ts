@@ -1,12 +1,13 @@
 import { SCANDINAVIAN_YATZY } from "./scandinavian";
 import type { ECategory, IRuleSet } from "./types";
 
-// Possibility to add NA yahtzee rules later
 export const RULE_SETS = {
   scandinavian: SCANDINAVIAN_YATZY,
 } as const;
 
 export type TRuleSetId = keyof typeof RULE_SETS;
+
+export const DEFAULT_RULE_SET_ID: TRuleSetId = "scandinavian";
 
 export function getRuleSet(id: TRuleSetId): IRuleSet {
   return RULE_SETS[id];

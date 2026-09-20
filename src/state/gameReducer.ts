@@ -50,7 +50,6 @@ export function gameReducer(state: IGameState, action: TGameAction): IGameState 
     case "RESET":
       return { ...state, players: state.players.map((p) => ({ ...p, sheet: {} })) };
 
-    // Removes the players so the UI goes back to the new-game screen.
     case "END_GAME":
       return { ...state, players: [] };
   }

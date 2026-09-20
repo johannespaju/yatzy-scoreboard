@@ -15,8 +15,6 @@ export function isGameOver(state: IGameState): boolean {
   );
 }
 
-// The phone goes around the table: whoever has filled the fewest categories
-// is up next, and on a tie the earlier player in the list goes first.
 export function getCurrentPlayer(state: IGameState): IPlayer | undefined {
   if (isGameOver(state)) return undefined;
   const ruleSet = getRuleSet(state.ruleSetId);

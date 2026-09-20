@@ -11,7 +11,6 @@ function game(...sheets: TScoreSheet[]): IGameState {
   };
 }
 
-// Every category filled with its highest valid value: total 374.
 const fullSheet: TScoreSheet = Object.fromEntries(
   SCANDINAVIAN_YATZY.categories.map((c) => [c.id, c.validValues[c.validValues.length - 1]]),
 );

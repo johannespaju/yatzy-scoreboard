@@ -11,7 +11,6 @@ const game: IGameState = {
   ],
 };
 
-// Minimal in-memory Storage so the tests run in Node without a browser.
 function fakeStorage(items: Record<string, string> = {}): Storage {
   const map = new Map(Object.entries(items));
   return {
