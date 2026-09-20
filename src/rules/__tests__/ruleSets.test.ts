@@ -35,6 +35,8 @@ describe("isValidScore (Best Yatzy)", () => {
     [ECategory.SmallStraight, 15],
     [ECategory.LargeStraight, 20],
     [ECategory.FullHouse, 29],
+    [ECategory.FullHouse, 10],
+    [ECategory.FullHouse, 25],
     [ECategory.ThreeOfAKind, 17],
     [ECategory.FourOfAKind, 6],
   ])("rejects %s = %i", (categoryId, value) => {

@@ -1,4 +1,4 @@
-import type { TDieFace } from "@/rules/types";
+import type { TDieFace, TDieValue } from "@/rules/types";
 
 interface IDieProps {
   face: TDieFace;
@@ -10,7 +10,7 @@ interface IDieProps {
 // 3 4 5
 // 6 7 8
 const GRID = [4, 8, 12];
-const PIPS: Record<Exclude<TDieFace, "?">, readonly number[]> = {
+const PIPS: Record<TDieValue, readonly number[]> = {
   1: [4],
   2: [2, 6],
   3: [2, 4, 6],
