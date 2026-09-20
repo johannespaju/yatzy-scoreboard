@@ -3,6 +3,11 @@
 Mobile-first scoreboard for Scandinavian Yatzy. Replaces the paper score pad: players roll
 real dice, pass one phone around, and type in their scores. No backend.
 
+Optional **virtual dice mode** (toggle on the New Game screen): a slot-machine cabinet rolls
+five dice, up to three rolls per turn, tap a die to hold it. After a roll the current player's
+empty cells preview their score; tapping one saves it immediately (with a short Undo). Only the
+current player's cells are tappable. Paper games are unchanged.
+
 ## Stack
 
 - Next.js (App Router, `src/`), React, TypeScript (strict)
@@ -18,6 +23,7 @@ real dice, pass one phone around, and type in their scores. No backend.
 - `npm run dev`: dev server (`-- -H 0.0.0.0` to open on a phone)
 - `npm run build`: static build to `out/`
 - `npm test`: tests
+- `npm run test:e2e`: Playwright (`E2E_PORT=3000` reuses an already running dev server)
 - `npm run lint`: lint
 
 ## Rules (Scandinavian Yatzy, 5 dice)
@@ -37,7 +43,9 @@ real dice, pass one phone around, and type in their scores. No backend.
 | Yatzy           | Five of a kind = 50                        |
 
 Any category can be scratched (0). Max total is 374. Scores are typed in and checked against
-each category's valid values, which are listed as data in the rule set.
+each category's valid values, which are listed as data in the rule set. Each category also has
+a declarative `scoring` rule (`face`, `ofAKind`, `twoPairs`, `fullHouse`, `straight`, `run`,
+`yatzy`, `chance`) that `rules/scoreDice.ts` uses to score five dice in dice mode.
 
 ## Rules (Best Yatzy, 5 dice)
 
@@ -56,13 +64,18 @@ Max total is 409.
 - `src/rules/`: rule sets as plain TypeScript data (`scandinavian.ts`, `best.ts`).
   `ruleSets.ts` is the registry (`RULE_SETS`, `DEFAULT_RULE_SET_ID`, `getRuleSet`, `isValidScore`).
   The UI never hard-codes categories; it reads them from the game's rule set.
-- `src/state/`: pure game reducer + `useGame` hook (localStorage).
-- `src/components/<feature>/`: UI grouped by feature (`game/`, `new-game/`, ...).
+- `src/state/`: pure game reducer + `useGame` hook (localStorage). `dice.ts` has the dice
+  helpers; `IGameState.dice` is present only in dice mode (`values`, `locked`, `rollsUsed`).
+  `ROLL_DICE` takes the rolled values as input so the reducer stays pure.
+- `src/components/<feature>/`: UI grouped by feature (`game/`, `new-game/`, `slot/`, ...).
   `game/Game.tsx` is the `'use client'` entry point; `app/page.tsx` just renders it.
+  `slot/` is the slot-machine cabinet: reels are CSS-animated strips (`reelGeometry.ts`),
+  its casino colours are scoped to `.slot-cabinet` in `globals.css`, haptics in `useHaptics.ts`.
 - Unit tests live in a `__tests__/` folder next to the code they test (`src/state/__tests__/`).
 - No barrel `index.ts` files. Import from the concrete file: `@/rules/types`, `@/state/useGame`.
 - Store only entered scores. Totals, bonus, current player and game over are calculated from them.
 - Read localStorage only after mount (in `useEffect`) to avoid hydration errors.
+- Every animation is `motion-safe:`; with reduced motion nothing waits for `animationend`.
 
 ## Conventions
 
