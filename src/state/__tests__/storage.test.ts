@@ -35,6 +35,25 @@ describe("parseGameState", () => {
     expect(parseGameState(JSON.stringify(best))).toEqual(best);
   });
 
+  it("round-trips a dice game", () => {
+    const dice: IGameState = { ...game, dice: { values: [1, 3, 3, 6, 2], locked: [false, true, true, false, false], rollsUsed: 2 } };
+    expect(parseGameState(JSON.stringify(dice))).toEqual(dice);
+  });
+
+  it("loads games saved before dice mode existed as paper games", () => {
+    const loaded = parseGameState(JSON.stringify(game));
+    expect(loaded && "dice" in loaded).toBe(false);
+  });
+
+  it("rejects broken dice", () => {
+    const withDice = (dice: unknown) => parseGameState(JSON.stringify({ ...game, dice }));
+    expect(withDice({ values: [1, 2, 3, 4], locked: [false, false, false, false, false], rollsUsed: 1 })).toBeUndefined();
+    expect(withDice({ values: [1, 2, 3, 4, 7], locked: [false, false, false, false, false], rollsUsed: 1 })).toBeUndefined();
+    expect(withDice({ values: [1, 2, 3, 4, 5], locked: ["no", false, false, false, false], rollsUsed: 1 })).toBeUndefined();
+    expect(withDice({ values: [1, 2, 3, 4, 5], locked: [false, false, false, false, false], rollsUsed: 4 })).toBeUndefined();
+    expect(withDice(null)).toBeUndefined();
+  });
+
   it("returns undefined for missing or broken JSON", () => {
     expect(parseGameState(null)).toBeUndefined();
     expect(parseGameState("")).toBeUndefined();
