@@ -21,11 +21,16 @@ export enum ESection {
   Lower = "lower",
 }
 
+/** A die face, or "?" for "any die" (used by Chance). */
+export type TDieFace = 1 | 2 | 3 | 4 | 5 | 6 | "?";
+
 export interface ICategory {
   id: ECategory;
   label: string;
   section: ESection;
   validValues: readonly number[];
+  /** Shown instead of the label; groups are drawn with a gap between them, e.g. Two Pairs: [[6, 6], [5, 5]]. */
+  dice?: readonly (readonly TDieFace[])[];
 }
 
 export interface IBonusRule {

@@ -2,22 +2,18 @@
 
 import { useState } from "react";
 import { DEFAULT_RULE_SET_ID, getRuleSet } from "@/rules/ruleSets";
-import type { ECategory } from "@/rules/types";
 import { isGameOver } from "@/state/selectors";
+import type { ISelectedCell } from "@/state/types";
 import { useGame } from "@/state/useGame";
 import { NewGame } from "@/components/new-game/NewGame";
 import { Scoreboard } from "./Scoreboard";
 import { ScoreInput } from "./ScoreInput";
 import { GameOver } from "./GameOver";
 
-interface ISelectedCell {
-  playerId: string;
-  categoryId: ECategory;
-}
-
 export function Game() {
   const { state, dispatch, hydrated } = useGame();
   const [selected, setSelected] = useState<ISelectedCell | null>(null);
+  const [lastSaved, setLastSaved] = useState<ISelectedCell | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);
 
   if (!hydrated) return null;
@@ -36,27 +32,49 @@ export function Game() {
       return;
     }
     setConfirmEnd(false);
+    setLastSaved(null);
     dispatch({ type: "END_GAME" });
   }
 
   return (
-    <main className="flex flex-col gap-4 p-4">
-      <header className="flex items-baseline justify-between">
-        <h1 className="text-xl font-bold">{ruleSet.name}</h1>
+    <main className="flex w-full max-w-lg mx-auto flex-col gap-5 px-4 py-5">
+      <header className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-bold leading-none tracking-tight">Yatzy Scoreboard</h1>
+          <h2 className="mt-2 text-xs font-bold uppercase tracking-widest text-ink-muted">{ruleSet.name}</h2>
+        </div>
         {!isGameOver(state) && (
-          <button type="button" onClick={endGame} onBlur={() => setConfirmEnd(false)} className="underline text-sm">
+          <button
+            type="button"
+            onClick={endGame}
+            onBlur={() => setConfirmEnd(false)}
+            className={`shrink-0 rounded-full border-2 border-ink px-3 py-1 text-sm font-medium ${
+              confirmEnd ? "bg-ink text-tile" : ""
+            }`}
+          >
             {confirmEnd ? "End game?" : "New game"}
           </button>
         )}
       </header>
 
-      <Scoreboard state={state} onSelectCell={(playerId, categoryId) => setSelected({ playerId, categoryId })} />
+      <Scoreboard
+        state={state}
+        lastSaved={lastSaved}
+        onPopEnd={() => setLastSaved(null)}
+        onSelectCell={(playerId, categoryId) => setSelected({ playerId, categoryId })}
+      />
 
       {isGameOver(state) && (
         <GameOver
           state={state}
-          onPlayAgain={() => dispatch({ type: "RESET" })}
-          onNewGame={() => dispatch({ type: "END_GAME" })}
+          onPlayAgain={() => {
+            setLastSaved(null);
+            dispatch({ type: "RESET" });
+          }}
+          onNewGame={() => {
+            setLastSaved(null);
+            dispatch({ type: "END_GAME" });
+          }}
         />
       )}
 
@@ -69,10 +87,12 @@ export function Game() {
           currentValue={selectedPlayer.sheet[selectedCategory.id]}
           onSave={(value) => {
             dispatch({ type: "SET_SCORE", playerId: selectedPlayer.id, categoryId: selectedCategory.id, value });
+            setLastSaved(selected);
             setSelected(null);
           }}
           onClear={() => {
             dispatch({ type: "CLEAR_SCORE", playerId: selectedPlayer.id, categoryId: selectedCategory.id });
+            setLastSaved(null);
             setSelected(null);
           }}
           onClose={() => setSelected(null)}

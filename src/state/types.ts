@@ -1,5 +1,5 @@
 import type { TRuleSetId } from "@/rules/ruleSets";
-import type { TScoreSheet } from "@/rules/types";
+import type { ECategory, TScoreSheet } from "@/rules/types";
 
 export interface IPlayer {
   id: string;
@@ -10,4 +10,9 @@ export interface IPlayer {
 export interface IGameState {
   ruleSetId: TRuleSetId;
   players: IPlayer[];
+}
+
+export interface ISelectedCell {
+  playerId: string;
+  categoryId: ECategory;
 }

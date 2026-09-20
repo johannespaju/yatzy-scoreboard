@@ -23,27 +23,45 @@ export function NewGame({ onStart }: INewGameProps) {
   const canStart = names.some((n) => n.trim().length > 0);
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-4 max-w-sm mx-auto w-full">
-      <h1 className="text-2xl font-bold">New game</h1>
-      {names.map((name, i) => (
-        <input
-          key={i}
-          type="text"
-          value={name}
-          onChange={(e) => setName(i, e.target.value)}
-          placeholder={`Player ${i + 1}`}
-          aria-label={`Player ${i + 1} name`}
-          className="border rounded px-3 py-2 text-lg"
-        />
-      ))}
-      {names.length < MAX_PLAYERS && (
-        <button type="button" onClick={() => setNames([...names, ""])} className="py-2 underline">
-          Add player
+    <form onSubmit={handleSubmit} className="flex min-h-dvh w-full max-w-sm mx-auto flex-col justify-center gap-6 px-5 py-10">
+      <div>
+        <h1 className="font-display text-5xl font-bold leading-none tracking-tight">Yatzy Scoreboard</h1>
+        <p className="mt-3 text-ink-muted">Scandinavian rules · 5 dice</p>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-ink-muted">New game</h2>
+        {names.map((name, i) => (
+          <input
+            key={i}
+            type="text"
+            value={name}
+            onChange={(e) => setName(i, e.target.value)}
+            placeholder={`Player ${i + 1}`}
+            aria-label={`Player ${i + 1} name`}
+            className="rounded-full border-2 border-rule bg-tile px-5 py-3 text-lg outline-none placeholder:text-ink-muted/60 focus:border-ink"
+          />
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {names.length < MAX_PLAYERS && (
+          <button
+            type="button"
+            onClick={() => setNames([...names, ""])}
+            className="rounded-full border-2 border-ink py-3 font-medium active:bg-canvas-strong"
+          >
+            Add player
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={!canStart}
+          className="rounded-full bg-ink py-3 text-lg font-bold text-tile disabled:opacity-30"
+        >
+          Start
         </button>
-      )}
-      <button type="submit" disabled={!canStart} className="py-3 rounded bg-foreground text-background font-bold disabled:opacity-40">
-        Start
-      </button>
+      </div>
     </form>
   );
 }
