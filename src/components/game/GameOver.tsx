@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { prefersReducedMotion } from "@/lib/motion";
 import { getPlayerTotals, getStandings } from "@/state/selectors";
 import type { IGameState } from "@/state/types";
 
@@ -15,8 +16,7 @@ export function GameOver({ state, onPlayAgain, onNewGame }: IGameOverProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    sectionRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" });
+    sectionRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "nearest" });
   }, []);
 
   return (

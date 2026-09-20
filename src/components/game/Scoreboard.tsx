@@ -1,7 +1,7 @@
 "use client";
 
 import { getRuleSet } from "@/rules/ruleSets";
-import { ESection, type ECategory, type ICategory } from "@/rules/types";
+import { ESection, type ECategory, type ICategory, type TScoreSheet } from "@/rules/types";
 import { getCurrentPlayer, getPlayerTotals } from "@/state/selectors";
 import type { IGameState, IPlayer, ISelectedCell } from "@/state/types";
 import { DiceRow } from "@/components/dice/DiceRow";
@@ -11,12 +11,16 @@ interface IScoreboardProps {
   lastSaved: ISelectedCell | null;
   onPopEnd: () => void;
   onSelectCell: (playerId: string, categoryId: ECategory) => void;
+  /** Dice mode: what the current player would score in each empty cell. */
+  previews?: TScoreSheet;
+  /** Dice mode: whether a cell may be tapped. Paper mode allows every cell. */
+  canSelect?: (player: IPlayer, category: ICategory) => boolean;
 }
 
 const LABEL_CELL = "sticky left-0 bg-canvas pr-2 text-left text-sm whitespace-nowrap";
 const SCORE_CELL = "min-w-12 text-center tabular-nums";
 
-export function Scoreboard({ state, lastSaved, onPopEnd, onSelectCell }: IScoreboardProps) {
+export function Scoreboard({ state, lastSaved, onPopEnd, onSelectCell, previews, canSelect }: IScoreboardProps) {
   const ruleSet = getRuleSet(state.ruleSetId);
   const current = getCurrentPlayer(state);
   const upper = ruleSet.categories.filter((c) => c.section === ESection.Upper);
@@ -42,6 +46,8 @@ export function Scoreboard({ state, lastSaved, onPopEnd, onSelectCell }: IScoreb
               player={player}
               category={category}
               highlighted={player.id === current?.id}
+              preview={player.id === current?.id ? previews?.[category.id] : undefined}
+              disabled={canSelect ? !canSelect(player, category) : false}
               justSaved={lastSaved?.playerId === player.id && lastSaved.categoryId === category.id}
               onClick={() => onSelectCell(player.id, category.id)}
               onPopEnd={onPopEnd}
@@ -103,27 +109,31 @@ interface IScoreCellProps {
   player: IPlayer;
   category: ICategory;
   highlighted: boolean;
+  preview: number | undefined;
+  disabled: boolean;
   justSaved: boolean;
   onClick: () => void;
   onPopEnd: () => void;
 }
 
-function ScoreCell({ player, category, highlighted, justSaved, onClick, onPopEnd }: IScoreCellProps) {
+function ScoreCell({ player, category, highlighted, preview, disabled, justSaved, onClick, onPopEnd }: IScoreCellProps) {
   const score = player.sheet[category.id];
   const isEmpty = score === undefined;
+  const showPreview = isEmpty && preview !== undefined;
   return (
     <button
       type="button"
       onClick={onClick}
       onAnimationEnd={onPopEnd}
+      disabled={disabled}
       aria-label={`${player.name}, ${category.label}`}
-      className={`h-11 w-full select-none rounded-lg font-medium transition-[background-color,transform] duration-150 active:scale-95 active:bg-canvas-strong ${
+      className={`h-11 w-full select-none rounded-lg font-medium transition-[background-color,transform] duration-150 enabled:active:scale-95 enabled:active:bg-canvas-strong ${
         highlighted ? "bg-canvas-strong" : "bg-tile"
       } ${isEmpty ? "text-ink-muted" : score === 0 ? "text-ink-muted line-through" : ""} ${
-        justSaved ? "motion-safe:animate-tile-pop" : ""
-      }`}
+        showPreview ? "italic" : ""
+      } ${disabled && isEmpty ? "opacity-50" : ""} ${justSaved ? "motion-safe:animate-tile-pop" : ""}`}
     >
-      {isEmpty ? "–" : score}
+      {showPreview ? preview : isEmpty ? "–" : score}
     </button>
   );
 }

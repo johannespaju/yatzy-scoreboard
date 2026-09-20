@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent, useRef, useState } from "react";
+import { prefersReducedMotion } from "@/lib/motion";
 import { formatValidValues } from "@/rules/format";
 import { isValidScore } from "@/rules/ruleSets";
 import type { ICategory, IRuleSet } from "@/rules/types";
@@ -14,10 +15,6 @@ interface IScoreInputProps {
   onSave: (value: number) => void;
   onClear: () => void;
   onClose: () => void;
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
 export function ScoreInput({ player, category, ruleSet, currentValue, onSave, onClear, onClose }: IScoreInputProps) {

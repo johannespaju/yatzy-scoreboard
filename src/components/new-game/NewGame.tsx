@@ -3,8 +3,15 @@
 import { type FormEvent, useState } from "react";
 import { DEFAULT_RULE_SET_ID, RULE_SETS, type TRuleSetId } from "@/rules/ruleSets";
 
+export interface INewGameOptions {
+  ruleSetId: TRuleSetId;
+  playerNames: string[];
+  /** Roll virtual dice in the app instead of typing scores from real dice. */
+  diceMode: boolean;
+}
+
 interface INewGameProps {
-  onStart: (ruleSetId: TRuleSetId, playerNames: string[]) => void;
+  onStart: (options: INewGameOptions) => void;
 }
 
 const MAX_PLAYERS = 6;
@@ -12,6 +19,7 @@ const MAX_PLAYERS = 6;
 export function NewGame({ onStart }: INewGameProps) {
   const [ruleSetId, setRuleSetId] = useState<TRuleSetId>(DEFAULT_RULE_SET_ID);
   const [names, setNames] = useState<string[]>(["", ""]);
+  const [diceMode, setDiceMode] = useState(false);
 
   function setName(index: number, name: string) {
     setNames(names.map((n, i) => (i === index ? name : n)));
@@ -19,7 +27,7 @@ export function NewGame({ onStart }: INewGameProps) {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    onStart(ruleSetId, names);
+    onStart({ ruleSetId, playerNames: names, diceMode });
   }
 
   const canStart = names.some((n) => n.trim().length > 0);
@@ -51,6 +59,22 @@ export function NewGame({ onStart }: INewGameProps) {
             );
           })}
         </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-ink-muted">Dice</h2>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={diceMode}
+          onClick={() => setDiceMode(!diceMode)}
+          className={`flex items-center justify-between rounded-full border-2 border-ink px-5 py-3 font-medium transition-colors duration-200 ${
+            diceMode ? "bg-ink text-tile" : "active:bg-canvas-strong"
+          }`}
+        >
+          Play with virtual dice
+          <span className="text-xs font-bold uppercase tracking-widest">{diceMode ? "On" : "Off"}</span>
+        </button>
       </div>
 
       <div className="flex flex-col gap-3">
