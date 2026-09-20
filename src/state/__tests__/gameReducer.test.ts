@@ -22,6 +22,11 @@ describe("NEW_GAME", () => {
     expect(newGame("  Anna ", "", "   ").players).toEqual([{ id: "player-1", name: "Anna", sheet: {} }]);
   });
 
+  it("stores the chosen rule set", () => {
+    const state = gameReducer(createInitialState(), { type: "NEW_GAME", ruleSetId: "american", playerNames: ["Anna"] });
+    expect(state.ruleSetId).toBe("american");
+  });
+
   it("leaves state unchanged when no names are given", () => {
     const state = newGame("Anna");
     expect(gameReducer(state, { type: "NEW_GAME", ruleSetId: "scandinavian", playerNames: [""] })).toBe(state);
@@ -57,6 +62,14 @@ describe("SET_SCORE", () => {
   ])("rejects invalid %s = %i and returns the same state", (categoryId, value) => {
     const state = newGame("Anna");
     expect(gameReducer(state, { type: "SET_SCORE", playerId: "player-1", categoryId, value })).toBe(state);
+  });
+
+  it("validates against the game's rule set", () => {
+    const state = gameReducer(createInitialState(), { type: "NEW_GAME", ruleSetId: "american", playerNames: ["Anna"] });
+    const set = (value: number) =>
+      gameReducer(state, { type: "SET_SCORE", playerId: "player-1", categoryId: ECategory.FullHouse, value });
+    expect(set(25).players[0].sheet).toEqual({ [ECategory.FullHouse]: 25 });
+    expect(set(20)).toBe(state);
   });
 
   it("ignores unknown players", () => {

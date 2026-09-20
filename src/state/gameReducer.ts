@@ -1,4 +1,4 @@
-import { getRuleSet, isValidScore, type TRuleSetId } from "@/rules/ruleSets";
+import { DEFAULT_RULE_SET_ID, getRuleSet, isValidScore, type TRuleSetId } from "@/rules/ruleSets";
 import type { ECategory } from "@/rules/types";
 import type { IGameState, IPlayer } from "./types";
 
@@ -10,7 +10,7 @@ export type TGameAction =
   | { type: "END_GAME" };
 
 export function createInitialState(): IGameState {
-  return { ruleSetId: "scandinavian", players: [] };
+  return { ruleSetId: DEFAULT_RULE_SET_ID, players: [] };
 }
 
 function updatePlayer(state: IGameState, playerId: string, update: (player: IPlayer) => IPlayer): IGameState {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DEFAULT_RULE_SET_ID, getRuleSet } from "@/rules/ruleSets";
+import { getRuleSet } from "@/rules/ruleSets";
 import { isGameOver } from "@/state/selectors";
 import type { ISelectedCell } from "@/state/types";
 import { useGame } from "@/state/useGame";
@@ -19,7 +19,7 @@ export function Game() {
   if (!hydrated) return null;
 
   if (state.players.length === 0) {
-    return <NewGame onStart={(playerNames) => dispatch({ type: "NEW_GAME", ruleSetId: DEFAULT_RULE_SET_ID, playerNames })} />;
+    return <NewGame onStart={(ruleSetId, playerNames) => dispatch({ type: "NEW_GAME", ruleSetId, playerNames })} />;
   }
 
   const ruleSet = getRuleSet(state.ruleSetId);

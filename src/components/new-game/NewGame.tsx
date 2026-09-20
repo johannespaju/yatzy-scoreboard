@@ -1,14 +1,16 @@
 "use client";
 
 import { type FormEvent, useState } from "react";
+import { DEFAULT_RULE_SET_ID, RULE_SETS, type TRuleSetId } from "@/rules/ruleSets";
 
 interface INewGameProps {
-  onStart: (playerNames: string[]) => void;
+  onStart: (ruleSetId: TRuleSetId, playerNames: string[]) => void;
 }
 
 const MAX_PLAYERS = 6;
 
 export function NewGame({ onStart }: INewGameProps) {
+  const [ruleSetId, setRuleSetId] = useState<TRuleSetId>(DEFAULT_RULE_SET_ID);
   const [names, setNames] = useState<string[]>(["", ""]);
 
   function setName(index: number, name: string) {
@@ -17,7 +19,7 @@ export function NewGame({ onStart }: INewGameProps) {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    onStart(names);
+    onStart(ruleSetId, names);
   }
 
   const canStart = names.some((n) => n.trim().length > 0);
@@ -26,7 +28,29 @@ export function NewGame({ onStart }: INewGameProps) {
     <form onSubmit={handleSubmit} className="flex min-h-dvh w-full max-w-sm mx-auto flex-col justify-center gap-6 px-5 py-10">
       <div>
         <h1 className="font-display text-5xl font-bold leading-none tracking-tight">Yatzy Scoreboard</h1>
-        <p className="mt-3 text-ink-muted">Scandinavian rules · 5 dice</p>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-ink-muted">Rules</h2>
+        <div role="radiogroup" aria-label="Rules" className="flex gap-2">
+          {(Object.keys(RULE_SETS) as TRuleSetId[]).map((id) => {
+            const active = id === ruleSetId;
+            return (
+              <button
+                key={id}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => setRuleSetId(id)}
+                className={`flex-1 rounded-full border-2 border-ink py-3 font-medium ${
+                  active ? "bg-ink text-tile" : "active:bg-canvas-strong"
+                }`}
+              >
+                {RULE_SETS[id].name}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="flex flex-col gap-3">

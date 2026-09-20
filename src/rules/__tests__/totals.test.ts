@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { AMERICAN_YATZY } from "../american";
 import { SCANDINAVIAN_YATZY } from "../scandinavian";
 import { calculateTotals, getMaxTotal } from "../totals";
 import { ECategory } from "../types";
@@ -20,6 +21,11 @@ describe("calculateTotals", () => {
     expect(calculateTotals(SCANDINAVIAN_YATZY, sheet)).toEqual({ upperSum: 63, bonus: 50, lowerSum: 0, total: 113 });
   });
 
+  it("gives the American bonus of 35 at 63", () => {
+    const sheet = { [ECategory.Sixes]: 30, [ECategory.Fives]: 25, [ECategory.Fours]: 8 };
+    expect(calculateTotals(AMERICAN_YATZY, sheet)).toEqual({ upperSum: 63, bonus: 35, lowerSum: 0, total: 98 });
+  });
+
   it("gives no bonus at 62", () => {
     const sheet = { [ECategory.Sixes]: 30, [ECategory.Fives]: 25, [ECategory.Fours]: 4, [ECategory.Threes]: 3 };
     expect(calculateTotals(SCANDINAVIAN_YATZY, sheet).bonus).toBe(0);
@@ -34,5 +40,9 @@ describe("calculateTotals", () => {
 describe("getMaxTotal", () => {
   it("is 374 for Scandinavian Yatzy", () => {
     expect(getMaxTotal(SCANDINAVIAN_YATZY)).toBe(374);
+  });
+
+  it("is 375 for American Yatzy", () => {
+    expect(getMaxTotal(AMERICAN_YATZY)).toBe(375);
   });
 });
