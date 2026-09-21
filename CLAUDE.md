@@ -70,7 +70,9 @@ Max total is 409.
 - `src/components/<feature>/`: UI grouped by feature (`game/`, `new-game/`, `slot/`, ...).
   `game/Game.tsx` is the `'use client'` entry point; `app/page.tsx` just renders it.
   `slot/` is the slot-machine cabinet: reels are CSS-animated strips (`reelGeometry.ts`),
-  its casino colours are scoped to `.slot-cabinet` in `globals.css`, haptics in `useHaptics.ts`.
+  styled with the site palette only (pink card, white reel window, ink accent), haptics in
+  `useHaptics.ts`. `DiceBar.tsx` is the compact sticky summary shown while the
+  cabinet is scrolled out of view.
 - Unit tests live in a `__tests__/` folder next to the code they test (`src/state/__tests__/`).
 - No barrel `index.ts` files. Import from the concrete file: `@/rules/types`, `@/state/useGame`.
 - Store only entered scores. Totals, bonus, current player and game over are calculated from them.

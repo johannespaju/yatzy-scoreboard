@@ -6,7 +6,6 @@ import { DEFAULT_RULE_SET_ID, RULE_SETS, type TRuleSetId } from "@/rules/ruleSet
 export interface INewGameOptions {
   ruleSetId: TRuleSetId;
   playerNames: string[];
-  /** Roll virtual dice in the app instead of typing scores from real dice. */
   diceMode: boolean;
 }
 

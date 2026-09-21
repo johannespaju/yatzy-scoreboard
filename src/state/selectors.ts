@@ -56,7 +56,6 @@ export function getRollsLeft(state: IGameState): number {
 export function canRoll(state: IGameState): boolean {
   const { dice } = state;
   if (!dice || dice.rollsUsed >= MAX_ROLLS || isGameOver(state)) return false;
-  // Holding every die and rolling again would change nothing.
   return dice.rollsUsed === 0 || dice.locked.some((held) => !held);
 }
 
@@ -65,7 +64,6 @@ export function canLock(state: IGameState): boolean {
   return dice !== undefined && dice.rollsUsed > 0 && dice.rollsUsed < MAX_ROLLS;
 }
 
-/** What the current player would score in each still-empty category, or undefined before rolling. */
 export function getPreviewScores(state: IGameState): TScoreSheet | undefined {
   const player = getCurrentPlayer(state);
   if (!state.dice || !hasRolled(state) || !player) return undefined;
@@ -76,7 +74,6 @@ export function getPreviewScores(state: IGameState): TScoreSheet | undefined {
   return previews;
 }
 
-/** True when tapping this cell should enter the dice score (same guard as SCORE_DICE). */
 export function canScoreDice(state: IGameState, playerId: string, categoryId: ECategory): boolean {
   const player = getCurrentPlayer(state);
   return hasRolled(state) && player?.id === playerId && player.sheet[categoryId] === undefined;

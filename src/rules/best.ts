@@ -4,7 +4,6 @@ import { ECategory, ESection, type IRuleSet } from "./types";
 // 3 of one face + 2 of another. 10 and 25 are impossible (they would need the same face twice).
 const FULL_HOUSE_VALUES = [7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28];
 
-/** Scandinavian Yatzy, but with the American straights (four in a row = 30, five in a row = 40). */
 export const BEST_YATZY: IRuleSet = {
   id: "best",
   name: "Best Yatzy",

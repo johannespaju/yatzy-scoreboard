@@ -30,10 +30,8 @@
   --animate-rise-in: rise-in 300ms var(--ease-sheet) both;
   --animate-tile-pop: tile-pop 180ms ease-out;
 
-  /* Slot cabinet. The reel keyframes read --reel-from/--reel-to from the element. */
   --animate-reel-spin: reel-spin 900ms cubic-bezier(0.22, 0.9, 0.3, 1.08) both;
-  --animate-marquee-blink: marquee-blink 1100ms steps(1, end) infinite;
-  --animate-lock-glow: lock-glow 1400ms ease-in-out infinite;
+  --animate-marquee-blink: marquee-blink 1100ms ease-in-out infinite;
 
   @keyframes sheet-up {
     from {
@@ -106,23 +104,11 @@
   }
   @keyframes marquee-blink {
     0%,
-    49% {
-      background: var(--slot-bulb-on);
-      box-shadow: 0 0 6px 1px var(--slot-bulb-on);
-    }
-    50%,
     100% {
-      background: var(--slot-bulb-off);
-      box-shadow: none;
-    }
-  }
-  @keyframes lock-glow {
-    0%,
-    100% {
-      box-shadow: 0 0 0 3px var(--slot-gold), 0 0 10px 2px var(--slot-gold);
+      opacity: 1;
     }
     50% {
-      box-shadow: 0 0 0 3px var(--slot-gold-bright), 0 0 22px 4px var(--slot-gold-bright);
+      opacity: 0.2;
     }
   }
 }
@@ -132,18 +118,4 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   -webkit-tap-highlight-color: transparent;
-}
-
-/* The slot cabinet has its own casino palette, so the pink theme stays untouched elsewhere. */
-.slot-cabinet {
-  --slot-red: #b3202a;
-  --slot-red-deep: #6f0f17;
-  --slot-gold: #e2b74a;
-  --slot-gold-bright: #ffe08a;
-  --slot-felt: #1f6b45;
-  --slot-felt-deep: #12432b;
-  --slot-chrome: #e4e4ea;
-  --slot-chrome-dark: #8a8a96;
-  --slot-bulb-on: #ffe9a3;
-  --slot-bulb-off: #5a2a10;
 }

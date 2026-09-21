@@ -113,7 +113,6 @@ describe("dice selectors", () => {
   });
 
   it("previews scores for the current player's empty categories only", () => {
-    // Both have one score, so player 1 is current again.
     const state = diceGame(dice(1), { [ECategory.Ones]: 1 }, { [ECategory.Ones]: 0 });
     const previews = getPreviewScores(state)!;
     expect(previews[ECategory.FullHouse]).toBe(19);

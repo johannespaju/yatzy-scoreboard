@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
 import { getRuleSet } from "@/rules/ruleSets";
 import type { ECategory } from "@/rules/types";
@@ -9,13 +9,13 @@ import { canLock, canRoll, canScoreDice, getCurrentPlayer, getPreviewScores, get
 import type { IDiceState, ISelectedCell } from "@/state/types";
 import { useGame } from "@/state/useGame";
 import { NewGame } from "@/components/new-game/NewGame";
+import { DiceBar } from "@/components/slot/DiceBar";
 import type { ISpin } from "@/components/slot/Reel";
 import { SlotCabinet } from "@/components/slot/SlotCabinet";
 import { Scoreboard } from "./Scoreboard";
 import { ScoreInput } from "./ScoreInput";
 import { GameOver } from "./GameOver";
 
-/** A dice score that can still be taken back, with the dice as they were. */
 interface IUndo extends ISelectedCell {
   dice: IDiceState;
 }
@@ -28,16 +28,31 @@ export function Game() {
   const [lastSaved, setLastSaved] = useState<ISelectedCell | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [undo, setUndo] = useState<IUndo | null>(null);
-  // The roll whose reels are still turning. Scores stay hidden until they stop.
   const [spin, setSpin] = useState<ISpin | null>(null);
   const [spinCount, setSpinCount] = useState(0);
   const spinning = spin !== null;
+  const cabinetRef = useRef<HTMLElement>(null);
+  const [cabinetVisible, setCabinetVisible] = useState(true);
+  const showCabinet = hydrated && state.dice !== undefined && getCurrentPlayer(state) !== undefined;
 
   useEffect(() => {
     if (!undo) return;
     const timer = window.setTimeout(() => setUndo(null), UNDO_MS);
     return () => window.clearTimeout(timer);
   }, [undo]);
+
+  useEffect(() => {
+    const cabinet = cabinetRef.current;
+    if (!cabinet) return;
+    const observer = new IntersectionObserver(([entry]) => setCabinetVisible(entry.intersectionRatio >= 0.5), {
+      threshold: [0.5],
+    });
+    observer.observe(cabinet);
+    return () => {
+      observer.disconnect();
+      setCabinetVisible(true);
+    };
+  }, [showCabinet]);
 
   if (!hydrated) return null;
 
@@ -69,11 +84,14 @@ export function Game() {
       setSelected({ playerId, categoryId });
       return;
     }
-    // Dice mode: the cell is saved right away and can be undone for a moment.
     const dice = state.dice;
     dispatch({ type: "SCORE_DICE", categoryId });
     setLastSaved({ playerId, categoryId });
     setUndo({ playerId, categoryId, dice });
+    scrollToTop();
+  }
+
+  function scrollToTop() {
     window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
   }
 
@@ -82,7 +100,6 @@ export function Game() {
     const from = state.dice.values;
     setUndo(null);
     dispatch({ type: "ROLL_DICE", values: randomDieValues() });
-    // With reduced motion the reels don't animate, so there is no animationend to wait for.
     if (!prefersReducedMotion()) {
       setSpinCount(spinCount + 1);
       setSpin({ id: spinCount + 1, from });
@@ -110,18 +127,27 @@ export function Game() {
         )}
       </header>
 
-      {state.dice && current && (
-        <SlotCabinet
-          dice={state.dice}
-          spin={spin}
-          canRoll={canRoll(state)}
-          canLock={canLock(state)}
-          rollsLeft={getRollsLeft(state)}
-          playerName={current.name}
-          onRoll={roll}
-          onToggleLock={(index) => dispatch({ type: "TOGGLE_LOCK", index })}
-          onSettled={() => setSpin(null)}
-        />
+      {showCabinet && state.dice && current && (
+        <>
+          <SlotCabinet
+            ref={cabinetRef}
+            dice={state.dice}
+            spin={spin}
+            canRoll={canRoll(state)}
+            canLock={canLock(state)}
+            rollsLeft={getRollsLeft(state)}
+            onRoll={roll}
+            onToggleLock={(index) => dispatch({ type: "TOGGLE_LOCK", index })}
+            onSettled={() => setSpin(null)}
+          />
+          <DiceBar
+            dice={state.dice}
+            rollsLeft={getRollsLeft(state)}
+            playerName={current.name}
+            visible={!cabinetVisible}
+            onClick={scrollToTop}
+          />
+        </>
       )}
 
       {undo && undoCategory && undoValue !== undefined && (

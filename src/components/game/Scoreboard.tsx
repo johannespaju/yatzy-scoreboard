@@ -11,9 +11,7 @@ interface IScoreboardProps {
   lastSaved: ISelectedCell | null;
   onPopEnd: () => void;
   onSelectCell: (playerId: string, categoryId: ECategory) => void;
-  /** Dice mode: what the current player would score in each empty cell. */
   previews?: TScoreSheet;
-  /** Dice mode: whether a cell may be tapped. Paper mode allows every cell. */
   canSelect?: (player: IPlayer, category: ICategory) => boolean;
 }
 
@@ -47,6 +45,7 @@ export function Scoreboard({ state, lastSaved, onPopEnd, onSelectCell, previews,
               category={category}
               highlighted={player.id === current?.id}
               preview={player.id === current?.id ? previews?.[category.id] : undefined}
+              previewKey={state.dice?.rollsUsed ?? 0}
               disabled={canSelect ? !canSelect(player, category) : false}
               justSaved={lastSaved?.playerId === player.id && lastSaved.categoryId === category.id}
               onClick={() => onSelectCell(player.id, category.id)}
@@ -110,13 +109,14 @@ interface IScoreCellProps {
   category: ICategory;
   highlighted: boolean;
   preview: number | undefined;
+  previewKey: number;
   disabled: boolean;
   justSaved: boolean;
   onClick: () => void;
   onPopEnd: () => void;
 }
 
-function ScoreCell({ player, category, highlighted, preview, disabled, justSaved, onClick, onPopEnd }: IScoreCellProps) {
+function ScoreCell({ player, category, highlighted, preview, previewKey, disabled, justSaved, onClick, onPopEnd }: IScoreCellProps) {
   const score = player.sheet[category.id];
   const isEmpty = score === undefined;
   const showPreview = isEmpty && preview !== undefined;
@@ -133,7 +133,15 @@ function ScoreCell({ player, category, highlighted, preview, disabled, justSaved
         showPreview ? "italic" : ""
       } ${disabled && isEmpty ? "opacity-50" : ""} ${justSaved ? "motion-safe:animate-tile-pop" : ""}`}
     >
-      {showPreview ? preview : isEmpty ? "–" : score}
+      {showPreview ? (
+        <span key={previewKey} className="motion-safe:animate-fade-in">
+          {preview}
+        </span>
+      ) : isEmpty ? (
+        "–"
+      ) : (
+        score
+      )}
     </button>
   );
 }

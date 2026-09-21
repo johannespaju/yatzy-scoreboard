@@ -2,7 +2,6 @@ import type { ICategory, TDieValue } from "./types";
 
 const FACES: readonly TDieValue[] = [1, 2, 3, 4, 5, 6];
 
-/** How many dice show each face, indexed by face (index 0 unused). */
 function countFaces(dice: readonly TDieValue[]): number[] {
   const counts = [0, 0, 0, 0, 0, 0, 0];
   for (const die of dice) counts[die]++;
@@ -13,7 +12,6 @@ function sum(dice: readonly TDieValue[]): number {
   return dice.reduce<number>((total, die) => total + die, 0);
 }
 
-/** Faces that appear at least `min` times, highest first. */
 function facesWithAtLeast(counts: number[], min: number): TDieValue[] {
   return FACES.filter((face) => counts[face] >= min).reverse();
 }
@@ -28,7 +26,6 @@ function longestRun(counts: number[]): number {
   return longest;
 }
 
-/** Score `dice` in `category`, or 0 if the dice don't qualify. */
 export function scoreDice(category: ICategory, dice: readonly TDieValue[]): number {
   const scoring = category.scoring;
   const counts = countFaces(dice);

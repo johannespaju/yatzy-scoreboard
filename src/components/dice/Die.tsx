@@ -2,14 +2,9 @@ import type { TDieFace, TDieValue } from "@/rules/types";
 
 interface IDieProps {
   face: TDieFace;
-  /** Pixels, or any SVG length such as "80%". */
   size?: number | string;
 }
 
-// Pip positions on a 3x3 grid inside a 16x16 viewBox, numbered
-// 0 1 2
-// 3 4 5
-// 6 7 8
 const GRID = [4, 8, 12];
 const PIPS: Record<TDieValue, readonly number[]> = {
   1: [4],

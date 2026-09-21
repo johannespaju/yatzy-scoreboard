@@ -28,7 +28,6 @@ export function ScoreInput({ player, category, ruleSet, currentValue, onSave, on
 
   function requestClose(action: () => void) {
     if (closing) return;
-    // With reduced motion the exit animation never runs, so animationend never fires.
     if (prefersReducedMotion()) {
       action();
       return;
