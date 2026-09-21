@@ -127,11 +127,11 @@ function ScoreCell({ player, category, highlighted, preview, previewKey, disable
       onAnimationEnd={onPopEnd}
       disabled={disabled}
       aria-label={`${player.name}, ${category.label}`}
-      className={`h-11 w-full select-none rounded-lg font-medium transition-[background-color,transform] duration-150 enabled:active:scale-95 enabled:active:bg-canvas-strong ${
-        highlighted ? "bg-canvas-strong" : "bg-tile"
-      } ${isEmpty ? "text-ink-muted" : score === 0 ? "text-ink-muted line-through" : ""} ${
-        showPreview ? "italic" : ""
-      } ${disabled && isEmpty ? "opacity-50" : ""} ${justSaved ? "motion-safe:animate-tile-pop" : ""}`}
+      className={`h-11 w-full select-none rounded-lg transition-[background-color,transform] duration-150 enabled:active:scale-95 enabled:active:bg-canvas-strong ${
+        highlighted && !isEmpty ? "bg-ink text-tile" : highlighted ? "bg-canvas-strong" : "bg-tile"
+      } ${isEmpty ? "font-medium text-ink-muted" : score === 0 ? `font-medium line-through ${highlighted ? "" : "text-ink-muted"}` : "font-bold"} ${
+        disabled && isEmpty ? "opacity-50" : ""
+      } ${justSaved ? "motion-safe:animate-tile-pop" : ""}`}
     >
       {showPreview ? (
         <span key={previewKey} className="motion-safe:animate-fade-in">

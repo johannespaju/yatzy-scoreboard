@@ -50,18 +50,24 @@ export function Reel({ index, value, held, rolled, canHold, spin, onToggleHold, 
         held ? "bg-canvas-strong shadow-[0_0_0_2px_var(--ink)]" : "bg-tile"
       }`}
     >
-      <div
-        key={spin?.id ?? "still"}
-        onAnimationEnd={handleAnimationEnd}
-        className={`flex flex-col will-change-transform ${spinning ? "motion-safe:animate-reel-spin" : ""}`}
-        style={stripStyle}
-      >
-        {STRIP.map((face, i) => (
-          <div key={i} className="flex flex-1 items-center justify-center">
-            <Die face={face} size="74%" />
-          </div>
-        ))}
-      </div>
+      {!rolled && !spinning ? (
+        <div className="flex h-full items-center justify-center">
+          <Die face="?" size="74%" />
+        </div>
+      ) : (
+        <div
+          key={spin?.id ?? "still"}
+          onAnimationEnd={handleAnimationEnd}
+          className={`flex flex-col will-change-transform ${spinning ? "motion-safe:animate-reel-spin" : ""}`}
+          style={stripStyle}
+        >
+          {STRIP.map((face, i) => (
+            <div key={i} className="flex flex-1 items-center justify-center">
+              <Die face={face} size="74%" />
+            </div>
+          ))}
+        </div>
+      )}
     </button>
   );
 }
